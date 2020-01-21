@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id='airflow_import_view_form' model='ir.ui.view'>
+        <field name="name">airflow.import.wizard.form</field>
+        <field name="model">airflow.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Airflow Import">
+                <sheet>
+                    <group>
+                        <field name="path" />
+                    </group>
+                    <group string="Products/Clients/Vehicles">
+                        <button style="margin: 1em;" name="import_partners" type="object" string="Import Partners" class="oe_highlight"/>
+                        <button style="margin: 1em;" name="import_sale_orders" type="object" string="Import Sale Orders" class="oe_highlight"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="airflow_import_tree_view" model="ir.ui.view">
+        <field name="name">airflow.import.wizard.tree</field>
+        <field name="model">airflow.import.wizard</field>
+        <field name="arch" type="xml">
+            <tree string="Airflow Import">
+                <!-- <field name="product_id" />
+                <field name="supplierinfo_id"/>
+                <field name="request_item_id"/>
+                <field name="request_item_price" /> -->
+            </tree>
+        </field>
+    </record>
+
+    <record id="airflow_import_search_form_view" model="ir.ui.view">
+        <field name="name">airflow.import.wizard.search</field>
+        <field name="model">airflow.import.wizard</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <search string="Airflow Import">
+                <!-- <field name="request_item_id" string="Product Code"/>
+                <field name="product_id" string="Product"/>
+                <field name="api_lines" string="Inventory Data"/> -->
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_airflow_import">
+        <field name="name">Airflow Import</field>
+        <field name="res_model">airflow.import.wizard</field>
+        <field name="search_view_id" ref="airflow_import_search_form_view"/>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_airflow_import" name="Airflow Import" parent="base.menu_administration" sequence="10"/>
+    <menuitem id="menu_airflow_import_view" action="action_airflow_import" parent="menu_airflow_import"/>
+
+</odoo>
