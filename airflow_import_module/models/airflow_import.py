@@ -161,9 +161,23 @@ class AirflowImportWizard(models.Model):
 
 			parent = Partner.search([('name', '=', data.get('name'))])
 			if not parent:
+				country = self.env['res.country'].search([('name', '=', COUNTRIES[data.get('country')])])
+				if country:
+					c_id = country.id
+				else:
+					c_id = False
+					
 				parent = Partner.create({
 						'name': data.get('name'),
 						'company_type': 'company',
+						'ref': data.get('custid', False),
+						'email': data.get('email', False),
+						'phone': data.get('phone', False),
+						'website': data.get('www', False),
+						'street': data.get('street', False),
+						'city': data.get('city', False),
+						'zip': data.get('zipcode', False),
+						'country_id': c_id
 					})
 			res['parent_id'] = parent.id
 
@@ -177,9 +191,23 @@ class AirflowImportWizard(models.Model):
 
 			parent = Partner.search([('name', '=', data.get('name'))])
 			if not parent:
+				country = self.env['res.country'].search([('name', '=', COUNTRIES[data.get('country')])])
+				if country:
+					c_id = country.id
+				else:
+					c_id = False
+					
 				parent = Partner.create({
 						'name': data.get('name'),
 						'company_type': 'company',
+						'ref': data.get('custid', False),
+						'email': data.get('email', False),
+						'phone': data.get('phone', False),
+						'website': data.get('www', False),
+						'street': data.get('street', False),
+						'city': data.get('city', False),
+						'zip': data.get('zipcode', False),
+						'country_id': c_id
 					})
 			res['parent_id'] = parent.id
 		else:
@@ -188,6 +216,8 @@ class AirflowImportWizard(models.Model):
 			partner_exists = Partner.search([('name', '=', data.get('name'))])
 			if partner_exists:
 				res['write'] = partner_exists.id
+
+		return res
 
 
 	def import_partners(self):
