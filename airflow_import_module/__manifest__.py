@@ -8,6 +8,7 @@
     'category': 'Sales',
     'depends': [
         'base',
+        'sale',
         'stock',
         'account',
     ],
