@@ -10,8 +10,9 @@
                     <group>
                         <field name="path" />
                     </group>
-                    <group string="Products/Clients/Vehicles">
+                    <group string="Partners/Products/Sale Orders">
                         <button style="margin: 1em;" name="import_partners" type="object" string="Import Partners" class="oe_highlight"/>
+                        <button style="margin: 1em;" name="import_products" type="object" string="Import Product Templates" class="oe_highlight"/>
                         <button style="margin: 1em;" name="import_sale_orders" type="object" string="Import Sale Orders" class="oe_highlight"/>
                     </group>
                 </sheet>
@@ -24,10 +25,6 @@
         <field name="model">airflow.import.wizard</field>
         <field name="arch" type="xml">
             <tree string="Airflow Import">
-                <!-- <field name="product_id" />
-                <field name="supplierinfo_id"/>
-                <field name="request_item_id"/>
-                <field name="request_item_price" /> -->
             </tree>
         </field>
     </record>
@@ -38,9 +35,6 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <search string="Airflow Import">
-                <!-- <field name="request_item_id" string="Product Code"/>
-                <field name="product_id" string="Product"/>
-                <field name="api_lines" string="Inventory Data"/> -->
             </search>
         </field>
     </record>

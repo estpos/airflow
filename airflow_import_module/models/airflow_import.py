@@ -136,7 +136,7 @@ class AirflowImportWizard(models.Model):
 					c_id = country.id
 				else:
 					c_id = False
-					
+
 				parent = Partner.create({
 						'name': data.get('name'),
 						'company_type': 'company',
@@ -254,13 +254,56 @@ class AirflowImportWizard(models.Model):
 				_logger.info(row)
 				return
 
-
-				order_nr = row.get('web-order_number', False)
+				order_nr = row.get('CLIENTID', False)
 				if order_nr:
-					order_exists = SaleOrder.search([('note', '=', order_nr)])
+					order_exists = SaleOrder.search([('client_order_ref', '=', order_nr)])
 				if order_exists:
 					update_vals = self.get_sale_order_update_vals(row)
 				else:
 					create_vals = self.get_sale_order_create_vals(row)
+
+	def get_template_vals(self, data):
+		res = {}
+
+		code = data.get('PROD_ID', False)
+		if code:
+			res['default_code'] = code.lstrip('0')
+
+		name = data.get('PROD_NAME', False)
+		if name:
+			res['name'] = name
+			if 'posten' in name.lower() or 'frakt' in name.lower():
+				res['type'] = 'service'
+			else:
+				res['type'] = 'product'
+
+		price = data.get('EX_Mva', False)
+		if price:
+			res['list_price'] = price
+
+		res['sale_ok'] = True
+		res['purchase_ok'] = True
+
+
+
+	def import_products(self):
+		ProductTmpl = self.env['product.template']
+		i = 0
+
+		with open(str(self.path) + '/orders.csv', mode='r') as csv_file:
+			csv_reader = csv.DictReader(csv_file, delimiter=";")
+			for row in csv_reader:
+				code = row.get('PROD_ID',False)
+				if code:
+					code = code.lstrip('0')
+					prod_tmpl = ProductTmpl.search([('default_code', '=', code)])
+					if not prod_tmpl:
+						product_tmpl_vals = self.get_template_vals(row)
+						prod_tmpl = ProductTmpl.create(product_tmpl_vals)
+
+				_logger.info(i)
+				i += 1
+
+
 
 
