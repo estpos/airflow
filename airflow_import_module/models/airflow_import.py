@@ -284,6 +284,7 @@ class AirflowImportWizard(models.Model):
 		res['sale_ok'] = True
 		res['purchase_ok'] = True
 
+		return res
 
 
 	def import_products(self):
