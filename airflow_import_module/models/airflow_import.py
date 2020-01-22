@@ -328,13 +328,17 @@ class AirflowImportWizard(models.Model):
 						if order_nr == last_order_id:
 							negative_qty_list.append(row)
 							continue
-							
 					order_exists = SaleOrder.search([('client_order_ref', '=', order_nr)])
 				if not order_nr:
 					no_order_nr_list.append(row)
 					continue
 
 				qty = row.get('QTY', False)
+				try:
+					qty = float(qty)
+				except ValueError:
+					continue
+
 				if float(qty) < 0:
 					negative_qty_list.append(row)
 					if order_exists:
@@ -363,7 +367,6 @@ class AirflowImportWizard(models.Model):
 					if not partner_id:
 						partner_not_found_list.append(row)
 						continue
-					_logger.info(create_vals)
 					order_exists = SaleOrder.create(create_vals)
 
 				_logger.info(i)
