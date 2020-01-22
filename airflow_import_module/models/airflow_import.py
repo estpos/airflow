@@ -348,14 +348,15 @@ class AirflowImportWizard(models.Model):
 							})
 				else:
 					create_vals = self.get_sale_order_create_vals(row)
-					if 'partner_id' not in create_vals:
+					partner_id = create_vals.get('partner_id', False)
+					if not partner_id:
 						partner_not_found_list.append(row)
 						continue
 					order_exists = SaleOrder.create(create_vals)
 
 				_logger.info(i)
 				i += 1
-				
+
 		_logger.info(no_order_nr_list)
 		_logger.info(negative_qty_list)
 		_logger.info(partner_not_found_list)
