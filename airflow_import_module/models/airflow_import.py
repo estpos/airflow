@@ -213,7 +213,7 @@ class AirflowImportWizard(models.Model):
 		else:
 			res['type'] = 'contact'
 			res['company_type'] = 'company'
-			partner_exists = Partner.search([('name', '=', data.get('name'))])
+			partner_exists = Partner.search([('name', '=', data.get('name')), ('ref', '=', data.get('custid'))])
 			if partner_exists:
 				res['write'] = partner_exists.id
 
