@@ -335,6 +335,7 @@ class AirflowImportWizard(models.Model):
 				if order_exists:
 					update_vals = self.get_order_line_vals(row)
 					note = update_vals.get('Note', False)
+					_logger.info(update_vals)
 					if note:
 						current_note = order_exists.note
 						new_note = str(current_note) + "\n" + note
