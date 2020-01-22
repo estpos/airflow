@@ -280,7 +280,7 @@ class AirflowImportWizard(models.Model):
 
 		client_id = data.get('CLIENTID', False)
 		if client_id:
-			partner = Partner.search([('ref', '=', client_id)])
+			partner = Partner.search([('ref', '=', client_id), ('parent_id', '=', False)])
 			res['partner_id'] = partner.id
 
 		order_nr = data.get('ORDERNR', False)
