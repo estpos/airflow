@@ -343,7 +343,7 @@ class AirflowImportWizard(models.Model):
 							})
 					if not note and update_vals:
 						order_exists.write({
-								'order_line': [(0, 0, order_line)]
+								'order_line': [(0, 0, update_vals)]
 							})
 				else:
 					create_vals = self.get_sale_order_create_vals(row)
