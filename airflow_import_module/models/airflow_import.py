@@ -315,8 +315,6 @@ class AirflowImportWizard(models.Model):
 		with open(str(self.path) + '/orders.csv', mode='r') as csv_file:
 			csv_reader = csv.DictReader(csv_file, delimiter=";")
 			for row in csv_reader:
-				_logger.info(row)
-				return
 
 				order_nr = row.get('ORDERNR', False)
 				if order_nr:
