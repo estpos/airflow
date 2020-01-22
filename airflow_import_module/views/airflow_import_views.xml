@@ -25,6 +25,7 @@
         <field name="model">airflow.import.wizard</field>
         <field name="arch" type="xml">
             <tree string="Airflow Import">
+                <field name="path" />
             </tree>
         </field>
     </record>

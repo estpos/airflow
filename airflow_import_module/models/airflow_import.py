@@ -238,14 +238,78 @@ class AirflowImportWizard(models.Model):
 				_logger.info(i)
 				i += 1
 
-	def get_sale_order_update_vals(self, data):
-		return
+	def get_order_line_vals(self, data):
+		SaleOrderLine = self.env['sale.order.line']
+		Product = self.env['product.product']
+		res = {}
+
+		prod_code = data.get('PROD_ID', False)
+		if not prod_code:
+			note = data.get('PROD_NAME', False)
+			if note:
+				res['note'] = note
+			return res
+		if prod_code:
+			prod_code = prod_code.lstrip('0')
+			product = Product.search([('default_code', '=', prod_code)])
+			if product:
+				res['product_id'] = product.id
+
+				qty = data.get('QTY', False)
+				if qty:
+					qty = float(qty.strip())
+
+				price = data.get('EX_Mva', False)
+				if price:
+					price = float(price.strip())
+
+				discount = data.get('Discount', False)
+				if discount:
+					discount = float(discount.strip())
+
+				res['product_uom_qty'] = qty
+				res['price_unit'] = price
+				res['discount'] = discount
+
+		return res
 
 	def get_sale_order_create_vals(self, data):
-		return
+		SaleOrder = self.env['sale.order']
+		Partner = self.env['res.partner']
+		res = {}
+
+		client_id = data.get('CLIENTID', False)
+		if client_id:
+			partner = Partner.search([('ref', '=', client_id)])
+			res['partner_id'] = partner.id
+
+		order_nr = data.get('ORDERNR', False)
+		if order_nr:
+			res['client_order_ref'] = order_nr
+
+		web_order_nr = data.get('WEB_ORDER_NR', False)
+		if web_order_nr:
+			res['web_order_nr'] = web_order_nr
+
+		order_date = data.get('Order_date', False)
+		if order_date:
+			res['date_order'] = order_date.datetime.strptime(order_date, '%m/%d/%Y')
+
+		order_line = self.get_order_line_vals(data)
+		note = order_line.get('Note', False)
+		if note:
+			res['note'] = note
+		if not note and order_line:
+			res['order_line'] = [(0, 0, order_line)]
+
+		res['state'] = 'done'
+
+		return res
 
 	def import_sale_orders(self):
 		SaleOrder = self.env['sale.order']
+		no_order_nr_list = []
+		negative_qty_list = []
 		i = 0
 
 		with open(str(self.path) + '/orders.csv', mode='r') as csv_file:
@@ -254,13 +318,41 @@ class AirflowImportWizard(models.Model):
 				_logger.info(row)
 				return
 
-				order_nr = row.get('CLIENTID', False)
+				order_nr = row.get('ORDERNR', False)
 				if order_nr:
 					order_exists = SaleOrder.search([('client_order_ref', '=', order_nr)])
+				if not order_nr:
+					no_order_nr_list.append(row)
+					continue
+
+				qty = row.get('QTY', False)
+				if qty < 0:
+					negative_qty_list.append(row)
+					if order_exists:
+						order_exists.action_cancel()
+						order_exists.unlink()
+					if not order_exists:
+						continue
+
 				if order_exists:
-					update_vals = self.get_sale_order_update_vals(row)
+					update_vals = self.get_order_line_vals(row)
+					note = update_vals.get('Note', False)
+					if note:
+						current_note = order_exists.note
+						new_note = str(current_note) + "\n" + note
+						order_exists.write({
+								'note': new_note
+							})
+					if not note and update_vals:
+						order_exists.write({
+								'order_line': [(0, 0, order_line)]
+							})
 				else:
 					create_vals = self.get_sale_order_create_vals(row)
+					order_exists = SaleOrder.create(create_vals)
+
+				_logger.info(i)
+				i += 1
 
 	def get_template_vals(self, data):
 		res = {}
@@ -304,7 +396,3 @@ class AirflowImportWizard(models.Model):
 
 				_logger.info(i)
 				i += 1
-
-
-
-
