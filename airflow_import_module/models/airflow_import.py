@@ -252,6 +252,7 @@ class AirflowImportWizard(models.Model):
 			return res
 		if prod_code:
 			prod_code = prod_code.lstrip('0')
+			_logger.info(prod_code)
 			product = Product.search([('default_code', '=', prod_code)])
 			if product:
 				res['product_id'] = product.id
