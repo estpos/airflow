@@ -243,9 +243,9 @@ class AirflowImportWizard(models.Model):
 		Product = self.env['product.product']
 		res = {}
 
-		prod_code = data.get('PROD_ID', False)
+		prod_code = data.get('PROD_ID', False).strip()
 		if not prod_code:
-			note = data.get('PROD_NAME', False)
+			note = data.get('PROD_NAME', False).strip()
 			if note:
 				res['note'] = note
 			return res
