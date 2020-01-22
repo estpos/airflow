@@ -68,6 +68,7 @@ class AirflowImportWizard(models.Model):
 		dregion
 		dzipcode
 		dcity
+		
 	'''
 
 	def get_partner_vals(self, data):
