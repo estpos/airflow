@@ -310,6 +310,7 @@ class AirflowImportWizard(models.Model):
 		SaleOrder = self.env['sale.order']
 		no_order_nr_list = []
 		negative_qty_list = []
+		partner_not_found_list = []
 		i = 0
 
 		with open(str(self.path) + '/orders.csv', mode='r') as csv_file:
@@ -347,10 +348,17 @@ class AirflowImportWizard(models.Model):
 							})
 				else:
 					create_vals = self.get_sale_order_create_vals(row)
+					if 'partner_id' not in create_vals:
+						partner_not_found_list.append(row)
+						continue
 					order_exists = SaleOrder.create(create_vals)
 
 				_logger.info(i)
 				i += 1
+				
+		_logger.info(no_order_nr_list)
+		_logger.info(negative_qty_list)
+		_logger.info(partner_not_found_list)
 
 	def get_template_vals(self, data):
 		res = {}
