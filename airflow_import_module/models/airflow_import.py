@@ -297,7 +297,7 @@ class AirflowImportWizard(models.Model):
 			res['date_order'] = datetime.strptime(order_date, '%m/%d/%Y')
 
 		order_line = self.get_order_line_vals(data)
-		note = order_line.get('Note', False)
+		note = order_line.get('note', False)
 		if note:
 			res['note'] = note
 		if not note and order_line:
@@ -317,9 +317,18 @@ class AirflowImportWizard(models.Model):
 		with open(str(self.path) + '/orders.csv', mode='r') as csv_file:
 			csv_reader = csv.DictReader(csv_file, delimiter=";")
 			for row in csv_reader:
+				if negative_qty_list:
+					last_order_id = negative_qty_list[-1].get('ORDERNR', False)
+				else:
+					last_order_id = False
 
 				order_nr = row.get('ORDERNR', False)
 				if order_nr:
+					if last_order_id:
+						if order_nr == last_order_id:
+							negative_qty_list.append(row)
+							continue
+							
 					order_exists = SaleOrder.search([('client_order_ref', '=', order_nr)])
 				if not order_nr:
 					no_order_nr_list.append(row)
