@@ -68,7 +68,7 @@ class AirflowImportWizard(models.Model):
 		dregion
 		dzipcode
 		dcity
-		
+
 	'''
 
 	def get_partner_vals(self, data):
@@ -326,11 +326,12 @@ class AirflowImportWizard(models.Model):
 					continue
 
 				qty = row.get('QTY', False)
-				if qty < 0:
+				if float(qty) < 0:
 					negative_qty_list.append(row)
 					if order_exists:
 						order_exists.action_cancel()
 						order_exists.unlink()
+						continue
 					if not order_exists:
 						continue
 
