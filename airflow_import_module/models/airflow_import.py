@@ -252,7 +252,6 @@ class AirflowImportWizard(models.Model):
 			return res
 		if prod_code:
 			prod_code = prod_code.lstrip('0')
-			_logger.info(prod_code)
 			product = Product.search([('default_code', '=', prod_code)])
 			if product:
 				res['product_id'] = product.id
@@ -355,6 +354,7 @@ class AirflowImportWizard(models.Model):
 					if not partner_id:
 						partner_not_found_list.append(row)
 						continue
+					_logger.info(create_vals)
 					order_exists = SaleOrder.create(create_vals)
 
 				_logger.info(i)
