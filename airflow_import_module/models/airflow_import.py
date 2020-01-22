@@ -316,7 +316,7 @@ class AirflowImportWizard(models.Model):
 
 		filename = self._context.get('button_id')
 
-		with open(str(self.path) + str(filename), mode='r') as csv_file:
+		with open(str(self.path) + "/" + str(filename), mode='r') as csv_file:
 			csv_reader = csv.DictReader(csv_file, delimiter=";")
 			for row in csv_reader:
 				if negative_qty_list:
