@@ -459,9 +459,9 @@ class AirflowImportWizard(models.Model):
 							})
 					if len(partner) > 1:
 						for p in partner:
-							if p.parent_id == False:
+							if p.company_type == 'company':
 								partner = p
-								
+
 					sale_order.write({
 							'partner_id': partner.id
 						})
