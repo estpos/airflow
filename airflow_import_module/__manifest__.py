@@ -15,6 +15,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/airflow_import_views.xml',
+        'views/sale_order.xml'
     ],
 
     'description': u'''

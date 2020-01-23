@@ -290,7 +290,7 @@ class AirflowImportWizard(models.Model):
 
 		web_order_nr = data.get('WEB_ORDER_NR', False)
 		if web_order_nr:
-			res['web_order_nr'] = web_order_nr
+			res['web_order_nr'] = web_order_nr.strip()
 
 		order_date = data.get('Order_date', False)
 		if order_date:
@@ -420,3 +420,17 @@ class AirflowImportWizard(models.Model):
 
 				_logger.info(i)
 				i += 1
+
+	def fix_sale_order_partner_id(self):
+		Partner = self.env['res.partner']
+		SaleOrder = self.env['sale.order']
+
+
+		with open(str(self.path) + '/webstore_orders.csv', more='r') as csv_file:
+			csv_reader = csv.DictReader(csv_file, delimiter=";")
+			for row in csv_reader:
+				email = row.get('User_email(username)', False)
+				order_id = row.get('order_id', False)
+				if email and order_id:
+					partner = Partner.search([('email', '=', email)])
+					sale_order = SaleOrder.search([('web_order_nr', '=', order_id)])
