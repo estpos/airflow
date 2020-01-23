@@ -431,6 +431,9 @@ class AirflowImportWizard(models.Model):
 			for row in csv_reader:
 				email = row.get('User_email(username)', False)
 				order_id = row.get('order_id', False)
+				_logger.info(email)
+				_logger.info(order_id)
+				return
 				if email and order_id:
 					partner = Partner.search([('email', '=', email)])
 					sale_order = SaleOrder.search([('web_order_nr', '=', order_id)])
