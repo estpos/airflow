@@ -435,17 +435,30 @@ class AirflowImportWizard(models.Model):
 	def fix_sale_order_partner_id(self):
 		Partner = self.env['res.partner']
 		SaleOrder = self.env['sale.order']
-
+		not_found = []
+		i = 0
 
 		with open(str(self.path) + '/webstore_orders_new.csv', mode='r') as csv_file:
 			csv_reader = csv.DictReader(csv_file, delimiter=";")
 			for row in csv_reader:
-				_logger.info(row)
 				email = row.get('User_email(username)', False)
 				order_id = row.get('order_id', False)
-				_logger.info(email)
-				_logger.info(order_id)
-				return
 				if email and order_id:
 					partner = Partner.search([('email', '=', email)])
 					sale_order = SaleOrder.search([('web_order_nr', '=', order_id)])
+					if not sale_order:
+						not_found.append(order_id)
+						continue
+					if not partner:
+						partner = Partner.create({
+								'name': email,
+								'type': 'contact',
+								'company_type': 'person',
+								'email': email
+							})
+					sale_order.write({
+							'partner_id': partner.id
+						})
+
+				_logger.info(i)
+				i += 1
