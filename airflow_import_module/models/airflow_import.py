@@ -448,6 +448,7 @@ class AirflowImportWizard(models.Model):
 					sale_order = SaleOrder.search([('web_order_nr', '=', order_id)])
 					if not sale_order:
 						not_found.append(order_id)
+						i += 1
 						continue
 					if not partner:
 						partner = Partner.create({
@@ -456,9 +457,16 @@ class AirflowImportWizard(models.Model):
 								'company_type': 'person',
 								'email': email
 							})
+					if len(partner) > 1:
+						for p in partner:
+							if p.parent_id == False:
+								partner = p
+								
 					sale_order.write({
 							'partner_id': partner.id
 						})
 
 				_logger.info(i)
 				i += 1
+
+			_logger.info(not_found)
