@@ -438,7 +438,9 @@ class AirflowImportWizard(models.Model):
 		not_found = []
 		i = 0
 
-		with open(str(self.path) + '/webstore_orders_new.csv', mode='r') as csv_file:
+		filename = self._context.get('button_id')
+		
+		with open(str(self.path) + "/" + str(filename), mode='r') as csv_file:
 			csv_reader = csv.DictReader(csv_file, delimiter=";")
 			for row in csv_reader:
 				email = row.get('User_email(username)', False)
