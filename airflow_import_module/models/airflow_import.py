@@ -426,7 +426,8 @@ class AirflowImportWizard(models.Model):
 		i = 0
 
 		for order in orders:
-			order.web_order_nr = order.web_order_nr.lstrip("0")
+			if order.web_order_nr:
+				order.web_order_nr = order.web_order_nr.lstrip("0")
 
 			_logger.info(i)
 			i += 1
