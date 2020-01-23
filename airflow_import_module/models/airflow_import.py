@@ -421,6 +421,16 @@ class AirflowImportWizard(models.Model):
 				_logger.info(i)
 				i += 1
 
+	def fix_so_web_order_nr(self):
+		orders = self.env['sale.order'].search([])
+		i = 0
+
+		for order in orders:
+			order.web_order_nr = order.web_order_nr.lstrip("0")
+
+			_logger.info(i)
+			i += 1
+
 	def fix_sale_order_partner_id(self):
 		Partner = self.env['res.partner']
 		SaleOrder = self.env['sale.order']

@@ -22,6 +22,7 @@
                         <button style="margin: 1em;" name="import_sale_orders" type="object" string="Import Sale Orders 72-84" class="oe_highlight" context="{'button_id': 'orders72-84.csv'}"/>
                         <button style="margin: 1em;" name="import_sale_orders" type="object" string="Import Sale Orders 84-92" class="oe_highlight" context="{'button_id': 'orders84-92.csv'}"/>
                         <button style="margin: 1em;" name="fix_sale_order_partner_id" type="object" string="Fix Sale Order Partners" class="oe_highlight"/>
+                        <button style="margin: 1em;" name="fix_so_web_order_nr" type="object" string="Fix SO Web Order Nr" class="oe_highlight"/>
                     </group>
                 </sheet>
             </form>
