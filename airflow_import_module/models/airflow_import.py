@@ -429,6 +429,7 @@ class AirflowImportWizard(models.Model):
 		with open(str(self.path) + '/webstore_orders.csv', mode='r') as csv_file:
 			csv_reader = csv.DictReader(csv_file, delimiter=";")
 			for row in csv_reader:
+				_logger.info(row)
 				email = row.get('User_email(username)', False)
 				order_id = row.get('order_id', False)
 				_logger.info(email)
