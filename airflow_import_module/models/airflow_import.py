@@ -6,7 +6,7 @@ import csv
 import sys
 import os
 import xml.etree.ElementTree as ElementTree
-from odoo import api, fields, registry, models, _
+from odoo import api, fields, tools, registry, models, _
 from datetime import date, datetime
 from odoo.tools import float_compare
 
