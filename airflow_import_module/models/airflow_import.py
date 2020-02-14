@@ -472,3 +472,26 @@ class AirflowImportWizard(models.Model):
 				i += 1
 
 			_logger.info(not_found)
+
+	def fix_product_templates(self):
+		ProductTmpl = self.env['product.template']
+		i = 0
+
+		with open(str(self.path) + '/template_fix.csv', mode='r') as csv_file:
+			csv_reader = csv.DictReader(csv_file, delimiter=";")
+			for row in csv_reader:
+				default_code = row.get('Products Model', False)
+				if default_code:
+					product_tmpl = ProductTmpl.search([('default_code', '=', default_code)])
+					if product_tmpl:
+						product_tmpl.write({
+								'default_code': row.get('Products Model', False),
+								'list_price': row.get('Products Price', False),
+								'name': row.get('Products Name no on ventilasjonsvarehuset', False),
+								'description': row.get('Products Short Description no on ventilasjonsvarehuset', False),
+								'length': row.get('Length (cm)', False),
+								'width': row.get('Width (cm)', False),
+								'height': row.get('Height (cm)', False),
+							})
+				_logger.info(i)
+				i += 1
