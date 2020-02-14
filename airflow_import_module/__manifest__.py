@@ -11,6 +11,7 @@
         'sale',
         'stock',
         'account',
+        'product_volume',
     ],
     'data': [
         'security/ir.model.access.csv',
