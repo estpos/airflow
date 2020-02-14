@@ -4,6 +4,7 @@ import base64
 import requests
 import csv
 import sys
+import os
 import xml.etree.ElementTree as ElementTree
 from odoo import api, fields, registry, models, _
 from datetime import date, datetime
@@ -492,6 +493,45 @@ class AirflowImportWizard(models.Model):
 								'length': row.get('Length (cm)', False),
 								'width': row.get('Width (cm)', False),
 								'height': row.get('Height (cm)', False),
+							})
+				_logger.info(i)
+				i += 1
+
+	def get_file_path(self, fname):
+		path = '/home/odoo/import_data/images'
+
+		for root, dirs, files in os.walk(path):
+			for filename in files:
+				if fname == filename:
+					full_path = os.path.join(root, filename)
+					return full_path
+
+	def get_image(self, path):
+		image = False
+		# img_path = get_module_resource('product.template', 'static/img', 'avatar.png') # your default image path
+		if path:
+			with open(path, 'rb') as f: # read the image from the path
+				image = f.read()
+		if image: # if the file type is .jpg then you don't need this whole if condition.
+			image = tools.image_colorize(image) 
+		return tools.image_resize_image_big(base64.b64encode(image))
+
+	def get_product_template_images(self):
+		ProductTmpl = self.env['product.template']
+
+		i = 0
+
+		with open(str(self.path) + '/catalog_product_images.csv', mode='r') as csv_file:
+			csv_reader = csv.DictReader(csv_file, delimiter=";")
+			for row in csv_reader:
+				default_code = row.get('Products Model', False)
+				filename = row.get('Original filename Main', False)
+				if default_code and filename:
+					product_tmpl = ProductTmpl.search([('default_code', '=', default_code)])
+					file_path = self.get_file_path(filename)
+					if product_tmpl and file_path:
+						product_tmpl.write({
+								'image_1920': self.get_image(file_path)
 							})
 				_logger.info(i)
 				i += 1

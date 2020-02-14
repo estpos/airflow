@@ -25,6 +25,7 @@
                         <button style="margin: 1em;" name="fix_sale_order_partner_id" type="object" string="Fix Sale Order Partners 2" class="oe_highlight" context="{'button_id': 'webstore_orders_new_2.csv'}"/>
                         <button style="margin: 1em;" name="fix_so_web_order_nr" type="object" string="Fix SO Web Order Nr" class="oe_highlight"/>
                         <button style="margin: 1em;" name="fix_product_templates" type="object" string="Fix Product Templates" class="oe_highlight"/>
+                        <button style="margin: 1em;" name="get_product_template_images" type="object" string="Get Product Template Images" class="oe_highlight"/>
                     </group>
                 </sheet>
             </form>
