@@ -512,8 +512,8 @@ class AirflowImportWizard(models.Model):
 		if path:
 			with open(path, 'rb') as f: # read the image from the path
 				image = f.read()
-		if image: # if the file type is .jpg then you don't need this whole if condition.
-			image = tools.image_colorize(image) 
+		# if image: # if the file type is .jpg then you don't need this whole if condition.
+			# image = tools.image_colorize(image) 
 		return tools.image_resize_image_big(base64.b64encode(image))
 
 	def get_product_template_images(self):
