@@ -396,6 +396,11 @@ class AirflowImportWizard(models.Model):
 
 		price = data.get('EX_Mva', False)
 		if price:
+			try:
+				price = float(price)
+			except ValueError:
+				price = 0
+				
 			res['list_price'] = price
 
 		res['sale_ok'] = True
