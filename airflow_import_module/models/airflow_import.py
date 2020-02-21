@@ -393,6 +393,8 @@ class AirflowImportWizard(models.Model):
 				res['type'] = 'service'
 			else:
 				res['type'] = 'product'
+		if not name:
+			return False
 
 		price = data.get('EX_Mva', False)
 		if price:
@@ -400,7 +402,7 @@ class AirflowImportWizard(models.Model):
 				price = float(price)
 			except ValueError:
 				price = 0
-				
+
 			res['list_price'] = price
 
 		res['sale_ok'] = True
@@ -422,7 +424,8 @@ class AirflowImportWizard(models.Model):
 					prod_tmpl = ProductTmpl.search([('default_code', '=', code)])
 					if not prod_tmpl:
 						product_tmpl_vals = self.get_template_vals(row)
-						prod_tmpl = ProductTmpl.create(product_tmpl_vals)
+						if product_tmpl_vals:
+							prod_tmpl = ProductTmpl.create(product_tmpl_vals)
 
 				_logger.info(i)
 				i += 1
