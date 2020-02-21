@@ -291,7 +291,7 @@ class AirflowImportWizard(models.Model):
 
 		web_order_nr = data.get('WEB_ORDER_NR', False)
 		if web_order_nr:
-			res['web_order_nr'] = web_order_nr.strip()
+			res['web_order_nr'] = web_order_nr.strip().lstrip("0")
 
 		order_date = data.get('Order_date', False)
 		if order_date:
@@ -508,12 +508,9 @@ class AirflowImportWizard(models.Model):
 
 	def get_image(self, path):
 		image = False
-		# img_path = get_module_resource('product.template', 'static/img', 'avatar.png') # your default image path
 		if path:
-			with open(path, 'rb') as f: # read the image from the path
+			with open(path, 'rb') as f:
 				image = f.read()
-		# if image: # if the file type is .jpg then you don't need this whole if condition.
-			# image = tools.image_colorize(image) 
 		return base64.b64encode(image)
 
 	def get_product_template_images(self):
