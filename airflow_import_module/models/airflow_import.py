@@ -263,7 +263,10 @@ class AirflowImportWizard(models.Model):
 
 				price = data.get('EX_Mva', False)
 				if price:
-					price = float(price.strip())
+					try:
+						price = float(price.strip())
+					except ValueError:
+						price = 0
 
 				discount = data.get('Discount', False)
 				if discount:
