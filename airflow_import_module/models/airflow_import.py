@@ -270,7 +270,10 @@ class AirflowImportWizard(models.Model):
 
 				discount = data.get('Discount', False)
 				if discount:
-					discount = float(discount.strip())
+					try:
+						discount = float(discount.strip())
+					except ValueError:
+						discount = 0
 
 				res['product_uom_qty'] = qty
 				res['price_unit'] = price
