@@ -298,7 +298,7 @@ class AirflowImportWizard(models.Model):
 			try:
 				res['date_order'] = datetime.strptime(order_date, '%m/%d/%Y')
 			except ValueError:
-				continue
+				pass
 
 		order_line = self.get_order_line_vals(data)
 		note = order_line.get('note', False)
