@@ -295,7 +295,10 @@ class AirflowImportWizard(models.Model):
 
 		order_date = data.get('Order_date', False)
 		if order_date:
-			res['date_order'] = datetime.strptime(order_date, '%m/%d/%Y')
+			try:
+				res['date_order'] = datetime.strptime(order_date, '%m/%d/%Y')
+			except ValueError:
+				res['date_order'] = False
 
 		order_line = self.get_order_line_vals(data)
 		note = order_line.get('note', False)
